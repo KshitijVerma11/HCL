@@ -1,0 +1,23 @@
+{
+  "name": "road-accident-risk-prediction-platform",
+  "version": "1.0.0",
+  "description": "Road Safety Intelligence Platform - Real-time accident risk prediction, Delhi Traffic Police blackspot clusters, and IoT telemetry",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "build": "node --check server.js js/app.js js/geo_engine.js js/iot_stream.js js/ml_engine.js",
+    "test": "node --test",
+    "check": "node --check server.js js/app.js js/geo_engine.js js/iot_stream.js js/ml_engine.js test/engines.test.js test/server.test.js"
+  },
+  "keywords": [
+    "road-safety",
+    "accident-risk-prediction",
+    "embedded-iot",
+    "heuristic-risk-scoring",
+    "geospatial",
+    "rest-api"
+  ],
+  "author": "Road Safety AI",
+  "license": "MIT"
+}

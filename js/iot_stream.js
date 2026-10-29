@@ -1,0 +1,189 @@
+/**
+ * Embedded IoT Telemetry Streamer & Roadside Alert Manager
+ * Simulates real-time sensor data from intelligent Roadside Units (RSUs).
+ */
+
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define([], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = factory();
+    } else {
+        root.IoTStream = factory();
+    }
+}(typeof self !== 'undefined' ? self : this, function () {
+
+    const IOT_STATIONS = [
+        {
+            node_id: "RSU-IOT-101",
+            name: "Arterial Highway Junction A-1",
+            latitude: 28.6180,
+            longitude: 77.2050,
+            road_type: "Highway",
+            speed_limit_kmh: 100,
+            sensors_installed: ["Doppler Radar", "Optical Moisture", "Acoustic Rumble", "Photocell"]
+        },
+        {
+            node_id: "RSU-IOT-102",
+            name: "Central Metro Overpass Bridge",
+            latitude: 28.6320,
+            longitude: 77.2180,
+            road_type: "Bridge/Overpass",
+            speed_limit_kmh: 80,
+            sensors_installed: ["Ultrasonic Fog Probe", "Surface Ice Sensor", "Doppler Radar"]
+        },
+        {
+            node_id: "RSU-IOT-103",
+            name: "Outer Ring Expressway Sharp Curve",
+            latitude: 28.5950,
+            longitude: 77.2250,
+            road_type: "Highway",
+            speed_limit_kmh: 80,
+            sensors_installed: ["Curvature Speed Camera", "Inductive Loop Braking", "Wetness Sensor"]
+        },
+        {
+            node_id: "RSU-IOT-104",
+            name: "Downtown Urban Interchange B-4",
+            latitude: 28.6250,
+            longitude: 77.1950,
+            road_type: "Intersection",
+            speed_limit_kmh: 50,
+            sensors_installed: ["Traffic Flow Counter", "Inductive Loop", "Photocell Lux"]
+        },
+        {
+            node_id: "RSU-IOT-105",
+            name: "Southern Commercial Corridor Roundabout",
+            latitude: 28.5800,
+            longitude: 77.1850,
+            road_type: "Roundabout",
+            speed_limit_kmh: 40,
+            sensors_installed: ["Optical Pavement Probe", "Traffic Flow Camera", "Vibration Sensor"]
+        },
+        {
+            node_id: "RSU-IOT-106",
+            name: "East River Valley Rural Highway",
+            latitude: 28.6500,
+            longitude: 77.2450,
+            road_type: "Rural Road",
+            speed_limit_kmh: 70,
+            sensors_installed: ["Fog Visibility Beacon", "Weather Probe", "Doppler Radar"]
+        }
+    ];
+
+    class IoTRoadsideEngine {
+        constructor() {
+            this.stations = IOT_STATIONS;
+            this.anomalies = new Map();
+        }
+
+        setAnomaly(nodeId, anomalyType) {
+            if (anomalyType === 'normal') {
+                this.anomalies.delete(nodeId);
+            } else {
+                this.anomalies.set(nodeId, anomalyType);
+            }
+        }
+
+        clearAnomalies() {
+            this.anomalies.clear();
+        }
+
+        getLatestTelemetry() {
+            const nowIso = new Date().toISOString();
+            return this.stations.map(st => {
+                const nodeId = st.node_id;
+                const anomaly = this.anomalies.get(nodeId);
+                const limit = st.speed_limit_kmh;
+
+                let moisture = 12.0;
+                let surface = "Dry";
+                let weather = "Clear";
+                let visibility = 9500;
+                let precip = 0.0;
+                let avgSpeed = Math.round(limit * (0.88 + Math.random() * 0.15));
+                let braking = Math.floor(1 + Math.random() * 5);
+                let vibration = Math.round((1.2 + Math.random() * 1.5) * 10) / 10;
+                let violations = Math.floor(1 + Math.random() * 4);
+                let temp = Math.round((24.0 + Math.random() * 4.0) * 10) / 10;
+
+                if (anomaly === 'flash_flood') {
+                    moisture = Math.round((92.0 + Math.random() * 7.5) * 10) / 10;
+                    surface = "Flooded";
+                    weather = "Heavy Rain";
+                    visibility = Math.floor(400 + Math.random() * 600);
+                    precip = Math.round((35.0 + Math.random() * 25.0) * 10) / 10;
+                    avgSpeed = Math.round(limit * 0.55);
+                    braking = Math.floor(20 + Math.random() * 15);
+                    vibration = Math.round((6.0 + Math.random() * 2.5) * 10) / 10;
+                    violations = Math.floor(1 + Math.random() * 3);
+                } else if (anomaly === 'dense_fog') {
+                    moisture = Math.round((75.0 + Math.random() * 12.0) * 10) / 10;
+                    surface = "Wet";
+                    weather = "Fog/Mist";
+                    visibility = Math.floor(80 + Math.random() * 250);
+                    precip = 0.5;
+                    avgSpeed = Math.round(limit * 0.65);
+                    braking = Math.floor(14 + Math.random() * 12);
+                    violations = 1;
+                } else if (anomaly === 'speeding_hotspot') {
+                    moisture = 8.0;
+                    surface = "Dry";
+                    weather = "Clear";
+                    avgSpeed = Math.round(limit * 1.35);
+                    violations = Math.floor(25 + Math.random() * 20);
+                    braking = Math.floor(10 + Math.random() * 12);
+                } else if (anomaly === 'heavy_congestion') {
+                    avgSpeed = Math.floor(12 + Math.random() * 8);
+                    braking = Math.floor(35 + Math.random() * 25);
+                    violations = 0;
+                }
+
+                // Active Alert logic
+                const activeAlerts = [];
+                if (moisture > 85.0) {
+                    activeAlerts.push({ type: "AQUAPLANING_RISK", severity: "CRITICAL", message: "Water film on road surface - Severe skidding danger" });
+                }
+                if (visibility < 500) {
+                    activeAlerts.push({ type: "DENSE_FOG_WARNING", severity: "HIGH", message: "Sight distance below 500m - Activate fog beacons" });
+                }
+                if (violations > 15) {
+                    activeAlerts.push({ type: "SPEEDING_SURGE", severity: "HIGH", message: `${violations} speed violations detected in last 5min` });
+                }
+                if (braking > 20) {
+                    activeAlerts.push({ type: "HARD_BRAKING_SPIKE", severity: "WARNING", message: "High frequency deceleration events on road loop" });
+                }
+
+                const status = activeAlerts.some(a => a.severity === "CRITICAL") ? "CRITICAL" :
+                               (activeAlerts.length ? "WARNING" : "ONLINE_OPTIMAL");
+
+                return {
+                    node_id: nodeId,
+                    name: st.name,
+                    latitude: st.latitude,
+                    longitude: st.longitude,
+                    road_type: st.road_type,
+                    speed_limit_kmh: limit,
+                    timestamp: nowIso,
+                    status: status,
+                    sensors: {
+                        surface_moisture_pct: moisture,
+                        surface_condition: surface,
+                        weather_condition: weather,
+                        precipitation_mm: precip,
+                        visibility_meters: visibility,
+                        average_speed_kmh: avgSpeed,
+                        traffic_density_veh_hr: anomaly === 'heavy_congestion' ? 3850 : Math.floor(1100 + Math.random() * 1200),
+                        vibration_index: vibration,
+                        hard_braking_events_5m: braking,
+                        speed_violations_5m: violations,
+                        pavement_temp_c: temp,
+                        battery_pct: Math.floor(92 + Math.random() * 8)
+                    },
+                    active_alerts: activeAlerts
+                };
+            });
+        }
+    }
+
+    return new IoTRoadsideEngine();
+}));

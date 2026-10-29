@@ -1,0 +1,5 @@
+# Python Dependencies for HCLTech IoT Evaluation & MQTT Telemetry Bridge
+paho-mqtt>=1.6.1
+requests>=2.31.0
+pandas>=2.0.0
+numpy>=1.24.0

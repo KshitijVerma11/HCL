@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Road Safety Intelligence — Real-Time Accident Risk & Blackspot Platform</title>
+    <meta name="description" content="Real-time road safety intelligence platform featuring live accident risk prediction, official Delhi Traffic Police statutory blackspots, IoT sensor telemetry, and corridor safety profiles.">
+    <meta name="keywords" content="road safety, accident prediction, blackspot zones, Delhi traffic, corridor risk, IoT roadside telemetry">
+    <meta name="author" content="Road Safety Intelligence Platform">
+
+    <!-- Progressive Web App (PWA) & Mobile Meta -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0D1524">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Road Safety">
+
+    <!-- Open Graph / Facebook / LinkedIn -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://roadsafety.ai/">
+    <meta property="og:title" content="Road Safety Intelligence — Real-Time Risk & Blackspot Map">
+    <meta property="og:description" content="Explore live road accident risk scores, official Delhi NCR high-fatality blackspots, IoT sensor streams, and interactive route safety simulations.">
+    <meta property="og:image" content="/favicon.svg">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Road Safety Intelligence — Real-Time Risk & Blackspot Map">
+    <meta name="twitter:description" content="Explore live road accident risk scores, official Delhi NCR high-fatality blackspots, IoT sensor streams, and interactive route safety simulations.">
+    <meta name="twitter:image" content="/favicon.svg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <!-- Hero Header with Mountain Silhouette Aesthetic Backdrop -->
+        <header class="hero-header">
+            <div class="hero-art-backdrop" aria-hidden="true">
+                <svg viewBox="0 0 1440 240" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="ridgeFar" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#192A44" stop-opacity="0.85" />
+                            <stop offset="100%" stop-color="#101C2F" stop-opacity="0.95" />
+                        </linearGradient>
+                        <linearGradient id="ridgeMid" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#1E3657" stop-opacity="0.9" />
+                            <stop offset="100%" stop-color="#0E1828" />
+                        </linearGradient>
+                        <linearGradient id="ridgeFore" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#24446E" />
+                            <stop offset="100%" stop-color="#0B1320" />
+                        </linearGradient>
+                        <radialGradient id="celestialGlow" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.3" />
+                            <stop offset="50%" stop-color="#F59E0B" stop-opacity="0.12" />
+                            <stop offset="100%" stop-color="#0B1320" stop-opacity="0" />
+                        </radialGradient>
+                    </defs>
+                    <!-- Celestial Moon & Ambient Starlight Glow -->
+                    <circle cx="1280" cy="50" r="55" fill="url(#celestialGlow)" />
+                    <path d="M1290 36 A 20 20 0 1 0 1304 62 A 16 16 0 0 1 1290 36 Z" fill="#F8FAFC" opacity="0.95" filter="drop-shadow(0 0 12px rgba(255,255,255,0.75))" />
+                    
+                    <!-- Starlight dust -->
+                    <circle cx="210" cy="38" r="1.5" fill="#FFFFFF" opacity="0.6" />
+                    <circle cx="480" cy="46" r="1.2" fill="#FFFFFF" opacity="0.5" />
+                    <circle cx="750" cy="28" r="1.6" fill="#F59E0B" opacity="0.75" />
+                    <circle cx="980" cy="42" r="1.3" fill="#FFFFFF" opacity="0.55" />
+                    <circle cx="1120" cy="22" r="1.8" fill="#FFFFFF" opacity="0.8" />
+
+                    <!-- Distant Mountain Ridge -->
+                    <path d="M0 135 Q 240 65 480 120 T 960 85 T 1440 110 L 1440 240 L 0 240 Z" fill="url(#ridgeFar)" />
+                    <!-- Mid-Range Mountain Ridge -->
+                    <path d="M0 165 Q 200 115 420 155 T 860 125 T 1440 145 L 1440 240 L 0 240 Z" fill="url(#ridgeMid)" />
+                    <!-- Foreground Silhouette -->
+                    <path d="M0 195 Q 280 155 560 190 T 1100 165 T 1440 185 L 1440 240 L 0 240 Z" fill="url(#ridgeFore)" />
+                </svg>
+            </div>
+
+            <div class="hero-content">
+                <div class="hero-top-row">
+                    <h1 class="hero-title">
+                        <span>🚦 Road Safety Intelligence</span>
+                        <span class="hero-title-accent">✦</span>
+                    </h1>
+                    <div class="hero-status-pill">
+                        <span class="hero-status-dot"></span>
+                        <span>Live Safety Feed Active • Delhi NCR</span>
+                    </div>
+                </div>
+                <p class="hero-subtitle">
+                    Real-time accident risk monitoring, blackspot detection, and safe travel advisories across the Delhi NCR region.
+                </p>
+                <div class="badge-group">
+                    <span class="badge badge-geo">🗺️ Live Incident Mapping</span>
+                    <span class="badge badge-iot">📡 Smart Roadside Sensors</span>
+                    <span class="badge badge-ml">🛡️ Predictive Safety Scoring</span>
+                </div>
+            </div>
+        </header>
+
+        <div id="startup-error" class="startup-error" role="alert" hidden></div>
+
+        <!-- KPI Metrics Grid -->
+        <section class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">
+                    <span>Safety Condition</span>
+                    <span>🛡️</span>
+                </div>
+                <div class="kpi-value" style="font-size: 1.45rem; color: #34D399;">Normal Flow</div>
+                <div class="kpi-sub">Regional driving conditions</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">
+                    <span>Mapped Incidents</span>
+                    <span>📊</span>
+                </div>
+                <div class="kpi-value" id="kpi-incidents-count">Loading...</div>
+                <div class="kpi-sub">Historical accident records</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">
+                    <span>Roadside Stations</span>
+                    <span>📡</span>
+                </div>
+                <div class="kpi-value" id="kpi-iot-count">6 Units</div>
+                <div class="kpi-sub">Active live sensor monitors</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">
+                    <span>Caution Hotspots</span>
+                    <span>📍</span>
+                </div>
+                <div class="kpi-value" id="kpi-hotspots-count">14 Zones</div>
+                <div class="kpi-sub">High-hazard areas mapped</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">
+                    <span>System Status</span>
+                    <span>⚡</span>
+                </div>
+                <div class="kpi-value" id="system-engine-status" style="color: #34D399;">● Online</div>
+                <div class="kpi-sub">Real-time safety engine</div>
+            </div>
+        </section>
+
+        <!-- Navigation Tabs -->
+        <nav class="tabs-nav" role="tablist" aria-label="Platform Views">
+            <button class="tab-btn active" role="tab" id="btn-tab-map" aria-selected="true" aria-controls="tab-map" data-tab="tab-map">🗺️ Safety Map</button>
+            <button class="tab-btn" role="tab" id="btn-tab-simulator" aria-selected="false" aria-controls="tab-simulator" data-tab="tab-simulator">🚗 Trip Risk Calculator</button>
+            <button class="tab-btn" role="tab" id="btn-tab-route" aria-selected="false" aria-controls="tab-route" data-tab="tab-route">🛣️ Route Safety</button>
+            <button class="tab-btn" role="tab" id="btn-tab-iot" aria-selected="false" aria-controls="tab-iot" data-tab="tab-iot">📡 Roadside Sensors</button>
+            <button class="tab-btn" role="tab" id="btn-tab-analytics" aria-selected="false" aria-controls="tab-analytics" data-tab="tab-analytics">📊 Safety Insights</button>
+            <button class="tab-btn" role="tab" id="btn-tab-api" aria-selected="false" aria-controls="tab-api" data-tab="tab-api">🔌 API Tools</button>
+        </nav>
+
+
+        <!-- ========================================================
+             TAB 1: GEOSPATIAL MAP & HOTSPOTS
+             ======================================================== -->
+        <div id="tab-map" class="tab-content active" role="tabpanel" aria-labelledby="btn-tab-map">
+            <div class="panel">
+                <h2 class="panel-title">🗺️ Interactive Safety Map & Blackspot Zones</h2>
+                <p class="panel-subtitle">Explore historical incident clusters, high-risk road corridors, and live roadside monitoring stations across Delhi NCR. Click any marker on the map to view safety details.</p>
+
+                <div class="map-grid">
+                    <!-- Controls Sidebar -->
+                    <div class="map-sidebar">
+                        <div>
+                            <h3 style="font-size: 0.95rem; margin-bottom: 14px; color: var(--accent-amber); display: flex; align-items: center; gap: 6px;">
+                                <span>🔍</span> Filter Road View
+                            </h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="map-filter-road">Road Type</label>
+                                <select id="map-filter-road" class="form-select" aria-label="Filter by Road Classification">
+                                    <option value="ALL">All Road Types</option>
+                                    <option value="Highway">Highway</option>
+                                    <option value="Urban Arterial">Urban Arterial</option>
+                                    <option value="Intersection">Intersection</option>
+                                    <option value="Rural Road">Rural Road</option>
+                                    <option value="Roundabout">Roundabout</option>
+                                    <option value="Bridge/Overpass">Bridge/Overpass</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="map-filter-weather">Weather</label>
+                                <select id="map-filter-weather" class="form-select" aria-label="Filter by Weather Condition">
+                                    <option value="ALL">All Weather</option>
+                                    <option value="Clear">Clear</option>
+                                    <option value="Rain">Rain</option>
+                                    <option value="Heavy Rain">Heavy Rain</option>
+                                    <option value="Fog/Mist">Fog/Mist</option>
+                                    <option value="Snow">Snow</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="map-filter-risk">Minimum Risk Filter</label>
+                                <div class="range-wrap">
+                                    <input type="range" id="map-filter-risk" class="range-slider" min="0" max="100" value="0" aria-label="Minimum Risk Score Filter">
+                                    <span class="range-val" id="map-filter-risk-val">0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border-subtle);">
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="layer-show-hotspots" checked>
+                                <span>Highlight Caution Blackspots</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="layer-show-iot" checked>
+                                <span>Show Roadside Stations</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Map Container -->
+                    <div>
+                        <div id="map" aria-label="Geospatial Incident and Hotspot Map"></div>
+                        <div id="map-empty-state" class="empty-state" hidden>No incidents match the active filters. Try selecting 'All Road Types' or lowering the minimum risk threshold.</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 24px;">
+                    <h3 class="panel-title" style="font-size: 1.05rem;">📍 Critical Caution Zones (Drive With Care)</h3>
+                    <div style="overflow-x: auto; margin-top: 10px;">
+                        <table class="custom-table" id="table-hotspots">
+                            <thead>
+                                <tr>
+                                    <th>Zone ID</th>
+                                    <th>Hazard Tier</th>
+                                    <th>Incident Count</th>
+                                    <th>Avg Risk Score</th>
+                                    <th>Hazard Index</th>
+                                    <th>Dominant Road</th>
+                                    <th>Weather Factor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated dynamically by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ========================================================
+             TAB 2: REAL-TIME RISK SIMULATOR
+             ======================================================== -->
+        <div id="tab-simulator" class="tab-content" role="tabpanel" aria-labelledby="btn-tab-simulator">
+            <div class="panel">
+                <h2 class="panel-title">🚗 Trip Risk Calculator</h2>
+                <p class="panel-subtitle">Estimate driving hazard levels before your journey by choosing a quick scenario or adjusting road and weather conditions.</p>
+
+                <!-- Quick Scenarios (Beginner-Friendly Preset Chips) -->
+                <div class="scenario-chips">
+                    <span style="font-size: 0.82rem; color: var(--text-secondary); align-self: center; font-weight: 600;">⚡ Quick Scenarios:</span>
+                    <button type="button" class="scenario-chip" data-preset="clear">☀️ Clear Day Drive</button>
+                    <button type="button" class="scenario-chip" data-preset="rain">🌧️ Heavy Monsoon Rain</button>
+                    <button type="button" class="scenario-chip" data-preset="night">🌙 Late Night Highway</button>
+                    <button type="button" class="scenario-chip" data-preset="rush">🚦 Peak Rush Hour</button>
+                </div>
+
+                <div id="sim-error-banner" class="alert-error" role="alert" hidden></div>
+
+                <div class="sim-grid">
+                    <!-- Column 1 -->
+                    <div>
+                        <h4 style="color: var(--accent-blue); margin-bottom: 12px;">🛣️ Road & Geometry</h4>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="sim-road-type">Road Classification</label>
+                            <select id="sim-road-type" class="form-select" aria-label="Road Classification">
+                                <option value="Highway" selected>Highway (Expressway)</option>
+                                <option value="Urban Arterial">Urban Arterial</option>
+                                <option value="Intersection">Multi-Lane Intersection</option>
+                                <option value="Rural Road">Rural Road</option>
+                                <option value="Roundabout">Roundabout</option>
+                                <option value="Bridge/Overpass">Bridge / Overpass</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="sim-speed-limit">Speed Limit (km/h)</label>
+                            <select id="sim-speed-limit" class="form-select" aria-label="Speed Limit">
+                                <option value="40">40 km/h</option>
+                                <option value="50">50 km/h</option>
+                                <option value="60">60 km/h</option>
+                                <option value="80" selected>80 km/h</option>
+                                <option value="100">100 km/h</option>
+                                <option value="120">120 km/h</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="sim-curvature">Road Curvature Index (0=Straight, 1.0=Hairpin)</label>
+                            <div class="range-wrap">
+                                <input type="range" id="sim-curvature" class="range-slider" min="0.0" max="1.0" step="0.05" value="0.35" aria-label="Road Curvature Index">
+                                <span class="range-val" id="sim-curvature-val">0.35</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="sim-grade">Elevation Slope Grade (%)</label>
+                            <div class="range-wrap">
+                                <input type="range" id="sim-grade" class="range-slider" min="-10" max="10" step="0.5" value="1.0" aria-label="Elevation Slope Grade">
+                                <span class="range-val" id="sim-grade-val">1.0%</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="sim-hour">Time of Day (Hour: 0 - 23)</label>
+                            <div class="range-wrap">
+                                <input type="range" id="sim-hour" class="range-slider" min="0" max="23" value="19" aria-label="Time of Day">
+                                <span class="range-val" id="sim-hour-val">19:00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2 -->
+                    <div>
+                        <h4 style="color: var(--accent-purple); margin-bottom: 12px;">🌧️ Weather & Environmental</h4>
+
+                        <div class="form-group">
+                            <label class="form-label" for="sim-weather">Weather Condition</label>
+                            <select id="sim-weather" class="form-select" aria-label="Weather Condition">
+                                <option value="Clear">Clear</option>
+                                <option value="Rain">Rain</option>
+                                <option value="Heavy Rain" selected>Heavy Rain</option>
+                                <option value="Fog/Mist">Fog / Mist</option>
+                                <option value="Snow">Snow</option>
+                                <option value="High Wind">High Wind</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="sim-surface">Pavement Surface Condition</label>
+                            <select id="sim-surface" class="form-select" aria-label="Pavement Surface Condition">
+                                <option value="Dry">Dry</option>
+                                <option value="Wet" selected>Wet</option>
+                                <option value="Flooded">Flooded / Standing Water</option>
+                                <option value="Ice/Snow">Ice / Snow</option>
+                                <option value="Loose Gravel">Loose Gravel</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="sim-lighting">Lighting Condition</label>
+                            <select id="sim-lighting" class="form-select" aria-label="Lighting Condition">
+                                <option value="Daylight">Daylight</option>
+                                <option value="Dusk/Dawn">Dusk / Dawn</option>
+                                <option value="Dark - Street Lights On" selected>Dark - Street Lights On</option>
+                                <option value="Dark - No Street Lights">Dark - No Street Lights</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="sim-precip">Precipitation Rate (mm/h)</label>
+                            <div class="range-wrap">
+                                <input type="range" id="sim-precip" class="range-slider" min="0" max="70" step="1" value="28" aria-label="Precipitation Rate">
+                                <span class="range-val" id="sim-precip-val">28 mm</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="sim-visibility">Sight Visibility (Meters)</label>
+                            <div class="range-wrap">
+                                <input type="range" id="sim-visibility" class="range-slider" min="100" max="10000" step="100" value="1200" aria-label="Sight Visibility">
+                                <span class="range-val" id="sim-visibility-val">1200m</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 3 -->
+                    <div>
+                        <h4 style="color: var(--accent-green); margin-bottom: 12px;">📡 Traffic & IoT Road Telemetry</h4>
+
+                        <div class="form-group">
+                            <label class="form-label" for="sim-density">Traffic Density (Vehicles / Hour)</label>
+                            <div class="range-wrap">
+                                <input type="range" id="sim-density" class="range-slider" min="100" max="4500" step="100" value="2600" aria-label="Traffic Density">
+                                <span class="range-val" id="sim-density-val">2600</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="sim-speed">Average Moving Speed (km/h)</label>
+                            <div class="range-wrap">
+                                <input type="range" id="sim-speed" class="range-slider" min="15" max="140" step="1" value="95" aria-label="Average Moving Speed">
+                                <span class="range-val" id="sim-speed-val">95 km/h</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="sim-moisture">IoT Optical Pavement Moisture (%)</label>
+                            <div class="range-wrap">
+                                <input type="range" id="sim-moisture" class="range-slider" min="0" max="100" step="1" value="82" aria-label="IoT Optical Pavement Moisture">
+                                <span class="range-val" id="sim-moisture-val">82%</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="sim-braking">IoT Hard Braking Events / Hour</label>
+                            <div class="range-wrap">
+                                <input type="range" id="sim-braking" class="range-slider" min="0" max="100" step="1" value="26" aria-label="IoT Hard Braking Events">
+                                <span class="range-val" id="sim-braking-val">26</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="sim-violations">IoT Speed Camera Violations / Hour</label>
+                            <div class="range-wrap">
+                                <input type="range" id="sim-violations" class="range-slider" min="0" max="80" step="1" value="14" aria-label="IoT Speed Camera Violations">
+                                <span class="range-val" id="sim-violations-val">14</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 14px;">
+                    <button class="btn btn-primary btn-block" id="btn-run-prediction">⚡ Calculate Trip Safety Score</button>
+                </div>
+
+                <!-- Prediction Results Area -->
+                <div class="pred-output-grid" id="sim-results-box">
+                    <!-- Gauge Box -->
+                    <div class="panel gauge-box" style="margin: 0;">
+                        <span style="font-size: 0.82rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em;">Predicted Trip Risk</span>
+                        <div class="gauge-score" id="res-risk-score">--</div>
+                        <span class="risk-pill risk-low" id="res-risk-pill">Ready to Calculate</span>
+                    </div>
+
+                    <!-- Probabilities Chart -->
+                    <div class="panel" style="margin: 0; display: flex; flex-direction: column;">
+                        <span style="font-size: 0.82rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em; margin-bottom: 8px;">Likelihood by Risk Category</span>
+                        <div style="flex: 1; min-height: 180px;">
+                            <canvas id="chart-probabilities" aria-label="Risk Likelihood Breakdown Chart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Explainable Factors & Interventions -->
+                    <div class="panel" style="margin: 0;">
+                        <span style="font-size: 0.82rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em; margin-bottom: 8px; display: block;">🔍 Primary Hazard Factors</span>
+                        <div id="res-factors-list">
+                            <!-- Populated dynamically -->
+                        </div>
+                        <span style="font-size: 0.82rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em; margin: 12px 0 6px 0; display: block;">🛡️ Safety Recommendations</span>
+                        <div id="res-recs-list" style="font-size: 0.83rem; color: var(--accent-blue);">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ========================================================
+             TAB 3: ROUTE SAFETY ANALYZER
+             ======================================================== -->
+        <div id="tab-route" class="tab-content" role="tabpanel" aria-labelledby="btn-tab-route">
+            <div class="panel">
+                <h2 class="panel-title">🛣️ Route Corridor Safety</h2>
+                <p class="panel-subtitle">Evaluate accident risk and locate high-hazard road segments along commuter corridors in Delhi NCR.</p>
+
+                <div id="route-error-banner" class="alert-error" role="alert" hidden></div>
+
+                <div style="display: flex; gap: 14px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
+                    <label class="form-label" for="route-preset" style="margin: 0;">Select Commuter Corridor:</label>
+                    <select id="route-preset" class="form-select" style="max-width: 380px;" aria-label="Corridor Preset">
+                        <option value="metro">Express Highway Metro Corridor (10 Waypoints)</option>
+                        <option value="hill">Urban Arterial to Hill Bypass (8 Waypoints)</option>
+                        <option value="ring">Downtown Commercial Ring Road (12 Waypoints)</option>
+                    </select>
+                    <button class="btn btn-secondary" id="btn-eval-route">Analyze Corridor Risk</button>
+                </div>
+
+                <div class="kpi-grid-4">
+                    <div class="kpi-card">
+                        <div class="kpi-label">Monitored Segments</div>
+                        <div class="kpi-value" id="route-kpi-count">--</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Average Route Risk</div>
+                        <div class="kpi-value" id="route-kpi-avg">--</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Highest Risk Spot</div>
+                        <div class="kpi-value" id="route-kpi-peak">--</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Caution Areas</div>
+                        <div class="kpi-value" id="route-kpi-hazard-count">--</div>
+                    </div>
+                </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Peak Hazard Score</div>
+                        <div class="kpi-value" id="route-kpi-peak" style="color: #F87171;">--</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">High-Risk Stretches</div>
+                        <div class="kpi-value" id="route-kpi-hazard-count">--</div>
+                    </div>
+                </div>
+
+                <div class="panel" style="background: rgba(15, 23, 42, 0.5);">
+                    <canvas id="chart-route-gradient" style="max-height: 320px;" aria-label="Route Risk Gradient Chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ========================================================
+             TAB 4: EMBEDDED IOT TELEMETRY & ALERTS
+             ======================================================== -->
+        <div id="tab-iot" class="tab-content" role="tabpanel" aria-labelledby="btn-tab-iot">
+            <div class="panel">
+                <h2 class="panel-title">📡 Live Roadside Sensors & Alerts</h2>
+                <p class="panel-subtitle">Real-time road surface telemetry, traffic speeds, and moisture detection from monitoring stations along Delhi NCR corridors.</p>
+
+                <div id="iot-status-banner" class="alert-error" role="alert" hidden></div>
+
+                <!-- Anomaly Injector -->
+                <div class="panel" style="background: rgba(14, 23, 38, 0.6); padding: 20px; margin-bottom: 20px; border-radius: var(--radius-md);">
+                    <h3 style="font-size: 0.98rem; margin-bottom: 12px; color: var(--accent-amber);">🧪 Test Weather & Traffic Scenarios</h3>
+                    <div style="display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-end;">
+                        <div style="flex: 1; min-width: 220px;">
+                            <label class="form-label" for="iot-target-node">Select Roadside Station</label>
+                            <select id="iot-target-node" class="form-select" aria-label="Target Roadside IoT Unit"></select>
+                        </div>
+                        <div style="flex: 1; min-width: 220px;">
+                            <label class="form-label" for="iot-anomaly-type">Choose Scenario to Test</label>
+                            <select id="iot-anomaly-type" class="form-select" aria-label="Simulated Road Anomaly">
+                                <option value="normal">Nominal Flow (Normal Conditions)</option>
+                                <option value="flash_flood">Simulate Flash Flood (Aquaplaning Alert)</option>
+                                <option value="dense_fog">Simulate Dense Fog (Low Visibility)</option>
+                                <option value="speeding_hotspot">Simulate Sudden Speeding Spike</option>
+                                <option value="heavy_congestion">Simulate Severe Traffic Jam</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" id="btn-apply-anomaly">Update Station Conditions</button>
+                    </div>
+                </div>
+
+                <!-- Active Alerts Banner -->
+                <div id="iot-alerts-container"></div>
+
+                <!-- IoT Units Cards -->
+                <div class="iot-grid" id="iot-cards-container"></div>
+            </div>
+        </div>
+
+
+        <!-- ========================================================
+             TAB 5: MODEL ANALYTICS & INSIGHTS
+             ======================================================== -->
+        <div id="tab-analytics" class="tab-content" role="tabpanel" aria-labelledby="btn-tab-analytics">
+            <div class="panel">
+                <h2 class="panel-title">📊 Road Safety Insights & Statistics</h2>
+                <p class="panel-subtitle">Key accident risk factors and historical incident distribution patterns across the Delhi NCR network.</p>
+
+                <div class="kpi-grid-4">
+                    <div class="kpi-card">
+                        <div class="kpi-label">Scoring Method</div>
+                        <div class="kpi-value" style="font-size: 1.35rem; color: #34D399;">Rule-Based</div>
+                        <div class="kpi-sub">Predictive risk evaluation</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Historical Records</div>
+                        <div class="kpi-value" id="analytics-dataset-count">Loading...</div>
+                        <div class="kpi-sub">Analyzed incident data</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Monitoring Scope</div>
+                        <div class="kpi-value" style="font-size: 1.25rem;">Delhi NCR</div>
+                        <div class="kpi-sub">Urban corridors & highways</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Sensor Telemetry</div>
+                        <div class="kpi-value" style="font-size: 1.25rem; color: #38BDF8;">Active Stream</div>
+                        <div class="kpi-sub">Roadside IoT units</div>
+                    </div>
+                </div>
+
+                <div class="two-col-grid">
+                    <div class="panel" style="background: rgba(14, 23, 38, 0.5);">
+                        <h3 class="panel-title" style="font-size: 1.02rem;">🎯 Primary Accident Risk Factors</h3>
+                        <div style="height: 320px;">
+                            <canvas id="chart-feature-importance" aria-label="Primary Accident Risk Factors Chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="panel" style="background: rgba(14, 23, 38, 0.5);">
+                        <h3 class="panel-title" style="font-size: 1.02rem;">📊 Historical Incidents by Hazard Tier</h3>
+                        <div style="height: 320px;">
+                            <canvas id="chart-confusion-matrix" aria-label="Historical Risk Tier Distribution Chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ========================================================
+             TAB 6: REST API EXPLORER
+             ======================================================== -->
+        <div id="tab-api" class="tab-content" role="tabpanel" aria-labelledby="btn-tab-api">
+            <div class="panel">
+                <h2 class="panel-title">🔌 Developer & API Tools</h2>
+                <p class="panel-subtitle">Directly test platform REST endpoints with request payloads and inspect live backend responses.</p>
+
+                <div class="two-col-grid">
+                    <div>
+                        <div class="form-group">
+                            <label class="form-label" for="api-endpoint-select">Select Endpoint</label>
+                            <select id="api-endpoint-select" class="form-select" aria-label="Select REST API Endpoint">
+                                <option value="GET /api/health">GET /api/health</option>
+                                <option value="POST /api/predict">POST /api/predict</option>
+                                <option value="POST /api/batch-predict">POST /api/batch-predict</option>
+                                <option value="GET /api/hotspots">GET /api/hotspots</option>
+                                <option value="GET /api/hotspots/nearest?lat=28.6139&lon=77.2090">GET /api/hotspots/nearest</option>
+                                <option value="GET /api/iot/telemetry">GET /api/iot/telemetry</option>
+                                <option value="POST /api/iot/simulate-anomaly">POST /api/iot/simulate-anomaly</option>
+                                <option value="GET /api/model/metrics">GET /api/model/metrics</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="api-request-body">Request Payload (JSON)</label>
+                            <textarea id="api-request-body" class="form-control" rows="8" style="font-family: monospace; font-size: 0.82rem;" aria-label="Request Payload JSON"></textarea>
+                        </div>
+
+                        <button class="btn btn-primary" id="btn-send-api-req">🚀 Send API Request</button>
+                    </div>
+
+                    <div>
+                        <label class="form-label">Live API Response</label>
+                        <div class="code-block" id="api-response-output" aria-live="polite">// Click 'Send API Request' to inspect live JSON response</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="app-footer">
+            <span>Road Accident Risk Intelligence Platform</span> • <span>Delhi NCR Safety Monitoring</span> • <span>Real-Time Geospatial Telemetry</span>
+        </footer>
+
+    </div>
+
+    <!-- Scripts -->
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+    <!-- Platform JavaScript Modules -->
+    <script src="js/ml_engine.js"></script>
+    <script src="js/geo_engine.js"></script>
+    <script src="js/iot_stream.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+</html>
