@@ -530,9 +530,13 @@ function createServer(options = {}) {
                     res.setHeader('Allow', 'GET');
                     throw new HttpError(405, 'Method not allowed.');
                 }
+                if (typeof IoTStream.syncLivePhysicalWeather === 'function') {
+                    await IoTStream.syncLivePhysicalWeather().catch(() => {});
+                }
                 sendJson(res, 200, {
                     status: 'success',
                     timestamp: new Date().toISOString(),
+                    live_physical_feed: typeof IoTStream.getLivePhysicalWeather === 'function' ? IoTStream.getLivePhysicalWeather() : null,
                     nodes: IoTStream.getLatestTelemetry()
                 });
                 return;
@@ -544,7 +548,7 @@ function createServer(options = {}) {
                     throw new HttpError(405, 'Method not allowed.');
                 }
                 const body = await readJsonBody(req);
-                const supportedAnomalies = new Set(['normal', 'flash_flood', 'dense_fog', 'speeding_hotspot', 'heavy_congestion']);
+                const supportedAnomalies = new Set(['normal', 'flash_flood', 'dense_fog', 'speeding_hotspot', 'heavy_congestion', 'crash_impact']);
                 const knownNode = IoTStream.stations.some(station => station.node_id === body.node_id);
                 if (!knownNode || !supportedAnomalies.has(body.anomaly_type)) {
                     throw new HttpError(400, 'node_id or anomaly_type is not recognized.');

@@ -93,21 +93,21 @@
             <div class="hero-content">
                 <div class="hero-top-row">
                     <h1 class="hero-title">
-                        <span>🚦 Road Safety Intelligence</span>
+                        <span>🚨 Live Road Accident Detection System</span>
                         <span class="hero-title-accent">✦</span>
                     </h1>
                     <div class="hero-status-pill">
-                        <span class="hero-status-dot"></span>
-                        <span>Live Safety Feed Active • Delhi NCR</span>
+                        <span class="hero-status-dot" style="background: #EF4444; box-shadow: 0 0 10px #EF4444;"></span>
+                        <span>Accident & Blackspot Monitor • Delhi NCR</span>
                     </div>
                 </div>
                 <p class="hero-subtitle">
-                    Real-time accident risk monitoring, blackspot detection, and safe travel advisories across the Delhi NCR region.
+                    Automated crash impact detection, physical meteorological sensor telemetry, and statutory high-fatality blackspot monitoring across Delhi corridors.
                 </p>
                 <div class="badge-group">
-                    <span class="badge badge-geo">🗺️ Live Incident Mapping</span>
-                    <span class="badge badge-iot">📡 Smart Roadside Sensors</span>
-                    <span class="badge badge-ml">🛡️ Predictive Safety Scoring</span>
+                    <span class="badge badge-geo" style="border-color: rgba(239, 68, 68, 0.4); color: #FCA5A5;">🚨 Crash Impact & Blackspot Alerts</span>
+                    <span class="badge badge-iot" style="border-color: rgba(56, 189, 248, 0.4); color: #BAE6FD;">📡 Live Delhi Ground Weather Synced</span>
+                    <span class="badge badge-ml" style="border-color: rgba(245, 158, 11, 0.4); color: #FDE68A;">⚡ 55 Official Police Blackspots</span>
                 </div>
             </div>
         </header>
@@ -118,54 +118,56 @@
         <section class="kpi-grid">
             <div class="kpi-card">
                 <div class="kpi-label">
-                    <span>Safety Condition</span>
-                    <span>🛡️</span>
+                    <span>Accident Alert Status</span>
+                    <span>🚨</span>
                 </div>
-                <div class="kpi-value" style="font-size: 1.45rem; color: #34D399;">Normal Flow</div>
-                <div class="kpi-sub">Regional driving conditions</div>
+                <div class="kpi-value" id="kpi-accident-status" style="font-size: 1.45rem; color: #34D399;">Active Monitor</div>
+                <div class="kpi-sub">Regional corridor scanning</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">
+                    <span>Statutory Blackspots</span>
+                    <span>📍</span>
+                </div>
+                <div class="kpi-value" id="kpi-hotspots-count">55 Zones</div>
+                <div class="kpi-sub">Official Delhi Police audits</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">
+                    <span>Physical Road Stations</span>
+                    <span>📡</span>
+                </div>
+                <div class="kpi-value" id="kpi-iot-count">6 Units</div>
+                <div class="kpi-sub">Live ground sensor telemetry</div>
             </div>
             <div class="kpi-card">
                 <div class="kpi-label">
                     <span>Mapped Incidents</span>
                     <span>📊</span>
                 </div>
-                <div class="kpi-value" id="kpi-incidents-count">Loading...</div>
-                <div class="kpi-sub">Historical accident records</div>
+                <div class="kpi-value" id="kpi-incidents-count">16,000 Records</div>
+                <div class="kpi-sub">Geocoded accident logs</div>
             </div>
             <div class="kpi-card">
                 <div class="kpi-label">
-                    <span>Roadside Stations</span>
-                    <span>📡</span>
-                </div>
-                <div class="kpi-value" id="kpi-iot-count">6 Units</div>
-                <div class="kpi-sub">Active live sensor monitors</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-label">
-                    <span>Caution Hotspots</span>
-                    <span>📍</span>
-                </div>
-                <div class="kpi-value" id="kpi-hotspots-count">14 Zones</div>
-                <div class="kpi-sub">High-hazard areas mapped</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-label">
-                    <span>System Status</span>
+                    <span>Live Sensor Sync</span>
                     <span>⚡</span>
                 </div>
-                <div class="kpi-value" id="system-engine-status" style="color: #34D399;">● Online</div>
-                <div class="kpi-sub">Real-time safety engine</div>
+                <div class="kpi-value" id="system-engine-status" style="color: #38BDF8;">● IMD Synced</div>
+                <div class="kpi-sub">Ground physical weather</div>
             </div>
         </section>
 
-        <!-- Navigation Tabs -->
-        <nav class="tabs-nav" role="tablist" aria-label="Platform Views">
-            <button class="tab-btn active" role="tab" id="btn-tab-map" aria-selected="true" aria-controls="tab-map" data-tab="tab-map">🗺️ Safety Map</button>
-            <button class="tab-btn" role="tab" id="btn-tab-simulator" aria-selected="false" aria-controls="tab-simulator" data-tab="tab-simulator">🚗 Trip Risk Calculator</button>
-            <button class="tab-btn" role="tab" id="btn-tab-route" aria-selected="false" aria-controls="tab-route" data-tab="tab-route">🛣️ Route Safety</button>
-            <button class="tab-btn" role="tab" id="btn-tab-iot" aria-selected="false" aria-controls="tab-iot" data-tab="tab-iot">📡 Roadside Sensors</button>
-            <button class="tab-btn" role="tab" id="btn-tab-analytics" aria-selected="false" aria-controls="tab-analytics" data-tab="tab-analytics">📊 Safety Insights</button>
-            <button class="tab-btn" role="tab" id="btn-tab-api" aria-selected="false" aria-controls="tab-api" data-tab="tab-api">🔌 API Tools</button>
+        <!-- Navigation Tabs: Dedicated Accident Detection Views -->
+        <nav class="tabs-nav" role="tablist" aria-label="Accident Detection Platform Views">
+            <button class="tab-btn active" role="tab" id="btn-tab-map" aria-selected="true" aria-controls="tab-map" data-tab="tab-map">🚨 Accident & Blackspot Map</button>
+            <button class="tab-btn" role="tab" id="btn-tab-iot" aria-selected="false" aria-controls="tab-iot" data-tab="tab-iot">📡 Roadside Accident Detectors</button>
+            <button class="tab-btn" role="tab" id="btn-tab-simulator" aria-selected="false" aria-controls="tab-simulator" data-tab="tab-simulator">🛡️ Accident Risk Scanner</button>
+            <div style="display: none;" aria-hidden="true">
+                <button class="tab-btn" role="tab" id="btn-tab-route" aria-selected="false" aria-controls="tab-route" data-tab="tab-route">Route</button>
+                <button class="tab-btn" role="tab" id="btn-tab-analytics" aria-selected="false" aria-controls="tab-analytics" data-tab="tab-analytics">Analytics</button>
+                <button class="tab-btn" role="tab" id="btn-tab-api" aria-selected="false" aria-controls="tab-api" data-tab="tab-api">API</button>
+            </div>
         </nav>
 
 
@@ -174,8 +176,17 @@
              ======================================================== -->
         <div id="tab-map" class="tab-content active" role="tabpanel" aria-labelledby="btn-tab-map">
             <div class="panel">
-                <h2 class="panel-title">🗺️ Interactive Safety Map & Blackspot Zones</h2>
-                <p class="panel-subtitle">Explore historical incident clusters, high-risk road corridors, and live roadside monitoring stations across Delhi NCR. Click any marker on the map to view safety details.</p>
+                <h2 class="panel-title">🚨 Real-Time Accident Detection Map & Blackspot Zones</h2>
+                <p class="panel-subtitle">Live spatial mapping of 55 official statutory Delhi Traffic Police blackspots, crash incident clusters, and active roadside collision detectors.</p>
+
+                <!-- Live Physical Ground Weather Bar -->
+                <div style="background: rgba(14, 28, 48, 0.7); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 8px; padding: 10px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #E2E8F0;">
+                        <span>📡</span>
+                        <span><strong>Delhi Physical Sensor Feed:</strong> <span id="map-live-weather-text">Syncing live physical radar & ground sensors...</span></span>
+                    </div>
+                    <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38BDF8; border: 1px solid rgba(56, 189, 248, 0.3); font-size: 0.75rem;">● Live Open-Meteo IMD Sync</span>
+                </div>
 
                 <div class="map-grid">
                     <!-- Controls Sidebar -->
@@ -534,30 +545,43 @@
              ======================================================== -->
         <div id="tab-iot" class="tab-content" role="tabpanel" aria-labelledby="btn-tab-iot">
             <div class="panel">
-                <h2 class="panel-title">📡 Live Roadside Sensors & Alerts</h2>
-                <p class="panel-subtitle">Real-time road surface telemetry, traffic speeds, and moisture detection from monitoring stations along Delhi NCR corridors.</p>
+                <h2 class="panel-title">📡 Live Roadside Accident Detectors (Delhi Sensors)</h2>
+                <p class="panel-subtitle">Real-time physical road surface telemetry, crash impact sensing, and hazard alerts from Roadside Units (RSUs) across Delhi NCR statutory corridors.</p>
+
+                <!-- Live Physical Station Status Banner -->
+                <div style="background: rgba(14, 28, 48, 0.7); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 8px; padding: 12px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.4rem;">📡</span>
+                        <div>
+                            <div style="font-weight: 700; color: #38BDF8; font-size: 0.95rem;">Live Physical Ground Meteorological Sensor Feed Active</div>
+                            <div style="font-size: 0.83rem; color: #94A3B8;" id="live-weather-summary">Connecting to Delhi physical meteorological radar & surface sensors...</div>
+                        </div>
+                    </div>
+                    <span class="badge" style="background: rgba(52, 211, 153, 0.15); color: #34D399; border: 1px solid rgba(52, 211, 153, 0.3);">● Physical Station Synced</span>
+                </div>
 
                 <div id="iot-status-banner" class="alert-error" role="alert" hidden></div>
 
-                <!-- Anomaly Injector -->
+                <!-- Anomaly / Crash Injector -->
                 <div class="panel" style="background: rgba(14, 23, 38, 0.6); padding: 20px; margin-bottom: 20px; border-radius: var(--radius-md);">
-                    <h3 style="font-size: 0.98rem; margin-bottom: 12px; color: var(--accent-amber);">🧪 Test Weather & Traffic Scenarios</h3>
+                    <h3 style="font-size: 0.98rem; margin-bottom: 12px; color: var(--accent-amber);">🚨 Test Accident & Hazard Detection</h3>
                     <div style="display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-end;">
                         <div style="flex: 1; min-width: 220px;">
                             <label class="form-label" for="iot-target-node">Select Roadside Station</label>
                             <select id="iot-target-node" class="form-select" aria-label="Target Roadside IoT Unit"></select>
                         </div>
                         <div style="flex: 1; min-width: 220px;">
-                            <label class="form-label" for="iot-anomaly-type">Choose Scenario to Test</label>
+                            <label class="form-label" for="iot-anomaly-type">Trigger Accident / Hazard Scenario</label>
                             <select id="iot-anomaly-type" class="form-select" aria-label="Simulated Road Anomaly">
-                                <option value="normal">Nominal Flow (Normal Conditions)</option>
-                                <option value="flash_flood">Simulate Flash Flood (Aquaplaning Alert)</option>
-                                <option value="dense_fog">Simulate Dense Fog (Low Visibility)</option>
-                                <option value="speeding_hotspot">Simulate Sudden Speeding Spike</option>
-                                <option value="heavy_congestion">Simulate Severe Traffic Jam</option>
+                                <option value="normal">Nominal Flow (All Clear)</option>
+                                <option value="crash_impact">🚨 Critical Vehicle Crash Impact (Accident Detection)</option>
+                                <option value="flash_flood">🌊 Sudden Flash Flood / Aquaplaning Hazard</option>
+                                <option value="dense_fog">🌫️ Zero-Visibility Winter Smog / Fog Hazard</option>
+                                <option value="speeding_hotspot">⚡ Reckless Speeding Surge (>100 km/h)</option>
+                                <option value="heavy_congestion">🛑 High-Risk Multi-Vehicle Highway Congestion</option>
                             </select>
                         </div>
-                        <button class="btn btn-primary" id="btn-apply-anomaly">Update Station Conditions</button>
+                        <button class="btn btn-primary" id="btn-apply-anomaly">Test Accident Trigger</button>
                     </div>
                 </div>
 

@@ -833,6 +833,19 @@ async function fetchIoTTelemetry() {
             throw new Error('Invalid telemetry payload format.');
         }
 
+        if (result.live_physical_feed) {
+            const feed = result.live_physical_feed;
+            const weatherSummaryEl = document.getElementById('live-weather-summary');
+            const mapWeatherEl = document.getElementById('map-live-weather-text');
+            const summaryStr = `Temp: ${feed.temperature_2m}°C • Relative Humidity: ${feed.relative_humidity_2m}% • Visibility: ${feed.visibility}m • Rain Radar: ${feed.precipitation}mm`;
+            if (weatherSummaryEl) {
+                weatherSummaryEl.textContent = summaryStr;
+            }
+            if (mapWeatherEl) {
+                mapWeatherEl.textContent = summaryStr;
+            }
+        }
+
         renderIoTTelemetry(result.nodes);
         renderMapIoT(result.nodes);
     } catch (error) {
@@ -878,23 +891,41 @@ function renderIoTTelemetry(nodes) {
 
     // Render Cards
     cardsContainer.innerHTML = '';
+    const kpiAccidentStatus = document.getElementById('kpi-accident-status');
+    if (kpiAccidentStatus) {
+        const hasCritical = nodes.some(n => n.status === 'CRITICAL');
+        if (hasCritical) {
+            kpiAccidentStatus.textContent = '🚨 Crash / Hazard';
+            kpiAccidentStatus.style.color = '#EF4444';
+        } else {
+            kpiAccidentStatus.textContent = 'Active Monitor';
+            kpiAccidentStatus.style.color = '#34D399';
+        }
+    }
+
     nodes.forEach(node => {
         const statusClass = node.status === 'CRITICAL' ? 'critical' : (node.status === 'WARNING' ? 'warning' : '');
         const card = document.createElement('div');
         card.className = `iot-card ${statusClass}`;
+        const sourceLabel = node.sensors.data_source || 'Delhi Ground Sensor Synced';
+        const vibrationDisplay = node.sensors.vibration_index > 3.5 ?
+            `<span style="color: #EF4444; font-weight: bold;">⚠️ ${node.sensors.vibration_index}g (IMPACT!)</span>` :
+            `${node.sensors.vibration_index}g`;
+
         card.innerHTML = `
             <div class="iot-header">
                 <span class="iot-id">${escapeHtml(node.node_id)}</span>
                 <span class="iot-status ${node.status.toLowerCase()}">● ${escapeHtml(node.status)}</span>
             </div>
-            <div style="font-size: 0.84rem; color: var(--text-secondary); margin-bottom: 8px;">${escapeHtml(node.name)}</div>
+            <div style="font-size: 0.88rem; font-weight: 600; color: #F8FAFC; margin-bottom: 3px;">${escapeHtml(node.name)}</div>
+            <div style="font-size: 0.72rem; color: #38BDF8; margin-bottom: 8px;">📡 ${escapeHtml(sourceLabel)}</div>
             <div class="iot-metrics">
                 <div class="iot-metric-item">💧 Moisture: <strong>${node.sensors.surface_moisture_pct}%</strong></div>
                 <div class="iot-metric-item">🚗 Speed: <strong>${node.sensors.average_speed_kmh} km/h</strong></div>
                 <div class="iot-metric-item">🛑 Hard Braking: <strong>${node.sensors.hard_braking_events_5m} / 5m</strong></div>
-                <div class="iot-metric-item">⚡ Violations: <strong>${node.sensors.speed_violations_5m} / 5m</strong></div>
+                <div class="iot-metric-item">⚡ Barrier Shock: <strong>${vibrationDisplay}</strong></div>
                 <div class="iot-metric-item">🌫️ Visibility: <strong>${node.sensors.visibility_meters} m</strong></div>
-                <div class="iot-metric-item">🔋 Battery: <strong>${node.sensors.battery_pct}%</strong></div>
+                <div class="iot-metric-item">🌡️ Temperature: <strong>${node.sensors.pavement_temp_c}°C</strong></div>
             </div>
         `;
         cardsContainer.appendChild(card);

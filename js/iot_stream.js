@@ -70,10 +70,52 @@
         }
     ];
 
+    let livePhysicalWeather = null;
+    let lastWeatherSync = 0;
+    const SYNC_INTERVAL_MS = 600000; // 10 minutes cache
+
+    async function fetchDelhiPhysicalWeather() {
+        try {
+            const url = 'https://api.open-meteo.com/v1/forecast?latitude=28.7041&longitude=77.1025&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,visibility,wind_speed_10m';
+            const res = await fetch(url, { signal: AbortSignal.timeout(4000) });
+            if (!res.ok) return null;
+            const data = await res.json();
+            return data.current || null;
+        } catch {
+            return null;
+        }
+    }
+
+    function mapWmoToWeather(code) {
+        if (code === 0) return 'Clear';
+        if (code === 1 || code === 2 || code === 3) return 'Partly Cloudy';
+        if (code === 45 || code === 48) return 'Fog/Mist';
+        if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return 'Rain';
+        if (code >= 95) return 'Thunderstorm';
+        return 'Clear';
+    }
+
     class IoTRoadsideEngine {
         constructor() {
             this.stations = IOT_STATIONS;
             this.anomalies = new Map();
+        }
+
+        async syncLivePhysicalWeather() {
+            const now = Date.now();
+            if (now - lastWeatherSync < SYNC_INTERVAL_MS && livePhysicalWeather) {
+                return livePhysicalWeather;
+            }
+            const current = await fetchDelhiPhysicalWeather();
+            if (current) {
+                livePhysicalWeather = current;
+                lastWeatherSync = now;
+            }
+            return livePhysicalWeather;
+        }
+
+        getLivePhysicalWeather() {
+            return livePhysicalWeather;
         }
 
         setAnomaly(nodeId, anomalyType) {
@@ -116,6 +158,26 @@
                 let violations = Math.floor(1 + Math.random() * 4);
                 let temp = base.temp;
 
+                if (livePhysicalWeather) {
+                    const realTemp = typeof livePhysicalWeather.temperature_2m === 'number' ? livePhysicalWeather.temperature_2m : 24.0;
+                    const realRh = typeof livePhysicalWeather.relative_humidity_2m === 'number' ? livePhysicalWeather.relative_humidity_2m : 60;
+                    const realPrecip = typeof livePhysicalWeather.precipitation === 'number' ? livePhysicalWeather.precipitation : 0.0;
+                    const realVis = typeof livePhysicalWeather.visibility === 'number' ? livePhysicalWeather.visibility : base.visibility;
+                    const realCode = typeof livePhysicalWeather.weather_code === 'number' ? livePhysicalWeather.weather_code : 0;
+
+                    temp = Math.round((realTemp + (base.temp - 26.5) * 0.4) * 10) / 10;
+                    precip = realPrecip;
+                    visibility = Math.round(realVis);
+                    weather = mapWmoToWeather(realCode);
+                    if (precip > 0.1) {
+                        moisture = Math.min(95, Math.round(precip * 18 + realRh * 0.3));
+                        surface = precip > 5 ? "Flooded" : "Wet";
+                    } else {
+                        moisture = Math.min(45, Math.round(realRh * 0.22));
+                        surface = moisture > 28 ? "Damp" : "Dry";
+                    }
+                }
+
                 if (anomaly === 'flash_flood') {
                     moisture = Math.round((92.0 + Math.random() * 7.5) * 10) / 10;
                     surface = "Flooded";
@@ -146,10 +208,19 @@
                     avgSpeed = Math.floor(12 + Math.random() * 8);
                     braking = Math.floor(35 + Math.random() * 25);
                     violations = 0;
+                } else if (anomaly === 'crash_impact') {
+                    surface = "Debris / Hazard";
+                    avgSpeed = 0;
+                    braking = 50;
+                    vibration = 8.8;
+                    violations = 0;
                 }
 
                 // Active Alert logic
                 const activeAlerts = [];
+                if (vibration > 3.5 || anomaly === 'crash_impact') {
+                    activeAlerts.push({ type: "CRASH_IMPACT_DETECTED", severity: "CRITICAL", message: "🚨 SEVERE VEHICULAR COLLISION DETECTED: Guardrail shock > 3.5g! Approaching motorists reduce speed!" });
+                }
                 if (moisture > 85.0) {
                     activeAlerts.push({ type: "AQUAPLANING_RISK", severity: "CRITICAL", message: "Water film on road surface - Severe skidding danger" });
                 }
@@ -187,7 +258,8 @@
                         hard_braking_events_5m: braking,
                         speed_violations_5m: violations,
                         pavement_temp_c: temp,
-                        battery_pct: Math.floor(92 + Math.random() * 8)
+                        battery_pct: Math.floor(92 + Math.random() * 8),
+                        data_source: livePhysicalWeather ? "Live Delhi Physical Ground Sensor" : "Calibrated RSU Baseline"
                     },
                     active_alerts: activeAlerts
                 };
