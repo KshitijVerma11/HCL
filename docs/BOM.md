@@ -34,3 +34,4 @@
 - **Target Budget**: Under ₹3,500 INR per deployed blackspot node.
 - **Achieved Budget**: **₹2,830 INR** (~$34 USD), well within commercial feasibility for municipal transportation authorities (Delhi Traffic Police / NHAI / PWD).
 - **Scalability**: For citywide deployment across all 55 designated Delhi blackspots, the total hardware procurement cost is approximately **₹1,55,650 INR**, offering immense return-on-investment compared to conventional proprietary traffic ITS radars costing ₹3,00,000+ each.
+

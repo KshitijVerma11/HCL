@@ -63,3 +63,4 @@ As prescribed in Step 3 of the HCLTech implementation process:
 4. **Crash Impact Trigger**:
    - Gently tap the guardrail/enclosure with acceleration $> 3.5\text{g}$.
    - Verify that the RSU instantly switches to `STATE_CRASH_IMPACT`, sounds the siren, strobes red at 4Hz, and issues an immediate MQTT alert packet.
+

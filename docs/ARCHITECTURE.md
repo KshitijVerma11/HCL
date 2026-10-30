@@ -159,3 +159,4 @@ The ESP32 firmware executes the following edge decision matrix to classify road 
    - `X-Frame-Options: DENY`: Prevents clickjacking attacks.
    - `X-Content-Type-Options: nosniff`: Mitigates MIME confusion vulnerabilities.
    - `Strict-Transport-Security`: Enforces encrypted transport when reverse-proxied over TLS.
+

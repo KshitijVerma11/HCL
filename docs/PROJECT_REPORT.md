@@ -189,3 +189,4 @@ The test suite (`test/server.test.js` and `test/engines.test.js`) executed via `
 4. Espressif Systems. *"ESP32 Technical Reference Manual (v4.8)."* 2023.
 5. OASIS Standard. *"MQTT Version 3.1.1 Plus Errata 01."* 2015.
 6. HCLTech. *"Embedded Systems & IoT Project Creation Guide (Version 1.0)."* September 2026.
+

@@ -148,3 +148,4 @@ graph TD
 1. **Microcontroller**: Espressif ESP32 DevKit v1 (32-bit Xtensa dual-core @ 240MHz, 520KB SRAM, 4MB Flash).
 2. **Power Budget**: Maximum current draw during active Wi-Fi transmit $< 240\text{ mA}$; sleep current $< 15\text{ mA}$; sustainable using a 5V 2A solar charging subsystem with 18650 Li-ion battery backup.
 3. **Operating Temperature**: Industrial range: $-10^\circ\text{C}$ to $+65^\circ\text{C}$ inside an IP65 waterproof outdoor junction enclosure.
+

@@ -82,3 +82,4 @@ flowchart LR
 | **Geospatial Cluster Accuracy** | Within 500m radius of statutory blackspots | **$100\%$ alignment** with 55 official Delhi Traffic Police coordinates |
 | **Hardware BOM Unit Cost** | $< ₹3,500 \text{ INR}$ per roadside node | **₹2,830 INR** (ESP32 + sensors + solar power subsystem) |
 | **Software Test Suite Coverage** | Complete functional coverage | **28/28 Unit & Integration Tests Passing (100%)** |
+

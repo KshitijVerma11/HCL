@@ -127,3 +127,4 @@ To guarantee 24/7 continuous operation even during consecutive monsoon rain or h
    - Dynamic acceleration magnitude:
      $$a_{\text{net}} = \sqrt{a_x^2 + a_y^2 + a_z^2}$$
    - Any reading where $\vert a_{\text{net}} \vert > 3.5\text{g}$ triggers the crash impact interrupt.
+
