@@ -30,7 +30,7 @@ This project has been structured and documented in strict compliance with the **
 | **Credential Security** | [`.env.example`](file:///c:/Users/kshit/OneDrive/Desktop/RoadAccident/.env.example) | Completed | Zero hardcoded API keys or secrets in source code; loaded via `.env`. |
 | **Final Presentation Slide Deck** | [`docs/PRESENTATION_DECK.md`](file:///c:/Users/kshit/OneDrive/Desktop/RoadAccident/docs/PRESENTATION_DECK.md) | Completed | 10-slide evaluation presentation deck with diagrams and speaker notes. |
 | **Comprehensive Project Report** | [`docs/PROJECT_REPORT.md`](file:///c:/Users/kshit/OneDrive/Desktop/RoadAccident/docs/PROJECT_REPORT.md) | Completed | Full BTech capstone report (Chapters 1–8) formatted for portal upload. |
-| **Live Demo Video Link & Script** | [`docs/DEMO_VIDEO_GUIDE.md`](file:///c:/Users/kshit/OneDrive/Desktop/RoadAccident/docs/DEMO_VIDEO_GUIDE.md) | Completed | Live video walkthrough script and demonstration link. |
+| **Live Demo Video Link & Script** | [`docs/DEMO_VIDEO_GUIDE.md`](https://drive.google.com/file/d/1kGyvTtmUarxL047QgffOz_q4kWIWE6pL/view?usp=sharing) | Completed | Live video walkthrough script and demonstration link. |
 | **Release Version Tag** | **v1.0** (September 2026) | Completed | Formal milestone version tag. |
 
 ---
