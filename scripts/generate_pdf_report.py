@@ -464,3 +464,4 @@ This capstone project delivers a complete cyber-physical IoT road safety platfor
 
 if __name__ == "__main__":
     generate_pdf_report()
+

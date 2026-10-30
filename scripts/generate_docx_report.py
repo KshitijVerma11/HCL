@@ -412,3 +412,4 @@ if __name__ == "__main__":
     out_dir = os.path.join(os.path.dirname(__file__), "..", "docs")
     out_file = os.path.join(out_dir, "PROJECT_REPORT.docx")
     create_report_docx(out_file)
+

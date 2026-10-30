@@ -16,56 +16,56 @@
     const IOT_STATIONS = [
         {
             node_id: "RSU-IOT-101",
-            name: "Arterial Highway Junction A-1",
-            latitude: 28.6180,
-            longitude: 77.2050,
+            name: "Mukarba Chowk (NH-44 / Outer Ring Rd)",
+            latitude: 28.7372,
+            longitude: 77.1603,
             road_type: "Highway",
-            speed_limit_kmh: 100,
-            sensors_installed: ["Doppler Radar", "Optical Moisture", "Acoustic Rumble", "Photocell"]
+            speed_limit_kmh: 70,
+            sensors_installed: ["Doppler Radar", "Optical Moisture", "MPU6050 Impact", "Photocell"]
         },
         {
             node_id: "RSU-IOT-102",
-            name: "Central Metro Overpass Bridge",
-            latitude: 28.6320,
-            longitude: 77.2180,
-            road_type: "Bridge/Overpass",
-            speed_limit_kmh: 80,
-            sensors_installed: ["Ultrasonic Fog Probe", "Surface Ice Sensor", "Doppler Radar"]
+            name: "Azadpur Chowk (GT Karnal Road)",
+            latitude: 28.7070,
+            longitude: 77.1780,
+            road_type: "Arterial Corridor",
+            speed_limit_kmh: 60,
+            sensors_installed: ["Ultrasonic Speed Probe", "Optical Moisture", "Doppler Radar"]
         },
         {
             node_id: "RSU-IOT-103",
-            name: "Outer Ring Expressway Sharp Curve",
-            latitude: 28.5950,
-            longitude: 77.2250,
-            road_type: "Highway",
-            speed_limit_kmh: 80,
-            sensors_installed: ["Curvature Speed Camera", "Inductive Loop Braking", "Wetness Sensor"]
+            name: "Bhalswa Chowk Flyover (Outer Ring Rd)",
+            latitude: 28.7420,
+            longitude: 77.1680,
+            road_type: "Highway/Flyover",
+            speed_limit_kmh: 70,
+            sensors_installed: ["Curvature Camera", "Inductive Loop", "Wetness Sensor"]
         },
         {
             node_id: "RSU-IOT-104",
-            name: "Downtown Urban Interchange B-4",
-            latitude: 28.6250,
-            longitude: 77.1950,
-            road_type: "Intersection",
+            name: "Kashmere Gate ISBT (Ring Road / NH-44)",
+            latitude: 28.6675,
+            longitude: 77.2285,
+            road_type: "Commercial Interchange",
             speed_limit_kmh: 50,
-            sensors_installed: ["Traffic Flow Counter", "Inductive Loop", "Photocell Lux"]
+            sensors_installed: ["Traffic Counter", "Inductive Loop", "Photocell Lux"]
         },
         {
             node_id: "RSU-IOT-105",
-            name: "Southern Commercial Corridor Roundabout",
-            latitude: 28.5800,
-            longitude: 77.1850,
-            road_type: "Roundabout",
-            speed_limit_kmh: 40,
-            sensors_installed: ["Optical Pavement Probe", "Traffic Flow Camera", "Vibration Sensor"]
+            name: "Ashram Chowk (Mathura Road / Ring Rd)",
+            latitude: 28.5710,
+            longitude: 77.2590,
+            road_type: "Urban Intersection",
+            speed_limit_kmh: 50,
+            sensors_installed: ["Optical Moisture", "Traffic Flow Camera", "MPU6050 Impact"]
         },
         {
             node_id: "RSU-IOT-106",
-            name: "East River Valley Rural Highway",
-            latitude: 28.6500,
-            longitude: 77.2450,
-            road_type: "Rural Road",
-            speed_limit_kmh: 70,
+            name: "Dhaula Kuan (Vandemataram Marg)",
+            latitude: 28.5925,
+            longitude: 77.1590,
+            road_type: "Grade-Separated Junction",
+            speed_limit_kmh: 60,
             sensors_installed: ["Fog Visibility Beacon", "Weather Probe", "Doppler Radar"]
         }
     ];
@@ -95,16 +95,26 @@
                 const anomaly = this.anomalies.get(nodeId);
                 const limit = st.speed_limit_kmh;
 
-                let moisture = 12.0;
+                const BASELINE_PROFILES = {
+                    "RSU-IOT-101": { moisture: 14.5, visibility: 7200, temp: 26.5 },
+                    "RSU-IOT-102": { moisture: 18.0, visibility: 6800, temp: 27.2 },
+                    "RSU-IOT-103": { moisture: 12.0, visibility: 8500, temp: 25.8 },
+                    "RSU-IOT-104": { moisture: 16.5, visibility: 6200, temp: 28.0 },
+                    "RSU-IOT-105": { moisture: 11.0, visibility: 7800, temp: 27.8 },
+                    "RSU-IOT-106": { moisture: 9.5,  visibility: 9200, temp: 26.0 }
+                };
+                const base = BASELINE_PROFILES[nodeId] || { moisture: 12.0, visibility: 8000, temp: 26.0 };
+
+                let moisture = base.moisture;
                 let surface = "Dry";
                 let weather = "Clear";
-                let visibility = 9500;
+                let visibility = base.visibility;
                 let precip = 0.0;
                 let avgSpeed = Math.round(limit * (0.88 + Math.random() * 0.15));
                 let braking = Math.floor(1 + Math.random() * 5);
                 let vibration = Math.round((1.2 + Math.random() * 1.5) * 10) / 10;
                 let violations = Math.floor(1 + Math.random() * 4);
-                let temp = Math.round((24.0 + Math.random() * 4.0) * 10) / 10;
+                let temp = base.temp;
 
                 if (anomaly === 'flash_flood') {
                     moisture = Math.round((92.0 + Math.random() * 7.5) * 10) / 10;
